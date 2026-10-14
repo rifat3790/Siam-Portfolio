@@ -71,7 +71,7 @@ export function ContactSection({ settings }: ContactSectionProps) {
   };
 
   return (
-    <section id="contact" className="relative py-20 md:py-28 overflow-hidden">
+    <section id="contact" className="relative py-12 sm:py-16 md:py-24 lg:py-28 overflow-hidden">
       <div className="max-w-[1680px] mx-auto px-5 sm:px-8 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-start">
           {/* Left Column: Contact Info Cards */}

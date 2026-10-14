@@ -63,7 +63,7 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
       : displayProjects.filter((p) => p.tags.some((t) => t.toLowerCase().includes(filter.toLowerCase())));
 
   return (
-    <section id="projects" className="relative py-20 md:py-28 overflow-hidden">
+    <section id="projects" className="relative py-12 sm:py-16 md:py-24 lg:py-28 overflow-hidden">
       <div className="max-w-[1680px] mx-auto px-5 sm:px-8 lg:px-12 space-y-12">
         {/* Section Header */}
         <div data-aos="fade-up" className="flex flex-col md:flex-row md:items-end justify-between gap-6">

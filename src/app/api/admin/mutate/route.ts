@@ -130,6 +130,16 @@ export async function POST(req: Request) {
         }
         break;
 
+      case "subscribers":
+        if (action === "delete" && data?.email) {
+          result = await SiteSettings.findOneAndUpdate(
+            {},
+            { $pull: { subscribers: { email: data.email } } },
+            { new: true }
+          );
+        }
+        break;
+
       default:
         return NextResponse.json({ success: false, message: `Unknown section: ${section}` }, { status: 400 });
     }

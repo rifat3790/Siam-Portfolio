@@ -60,7 +60,7 @@ export function ServicesSection({ services }: ServicesSectionProps) {
   };
 
   return (
-    <section id="services" className="relative py-20 md:py-28 overflow-hidden">
+    <section id="services" className="relative py-12 sm:py-16 md:py-24 lg:py-28 overflow-hidden">
       <div className="max-w-[1680px] mx-auto px-5 sm:px-8 lg:px-12 space-y-12">
         {/* Section Header */}
         <div data-aos="fade-up" className="text-center space-y-3 max-w-2xl mx-auto">

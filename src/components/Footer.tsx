@@ -208,64 +208,77 @@ export function Footer({ settings, hero }: FooterProps) {
             </div>
           </div>
 
-          {/* Column 2: Navigation Links (2.5 Cols) */}
-          <div data-aos="fade-up" data-aos-delay="100" className="lg:col-span-3 space-y-4">
-            <div className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-              <span>Navigation</span>
+          {/* Column 2: Navigation & Explore Links (3 Cols) */}
+          <div data-aos="fade-up" data-aos-delay="100" className="lg:col-span-3 grid grid-cols-2 gap-6">
+            {/* Sub-col 1: Navigation */}
+            <div className="space-y-4">
+              <div className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                <span>Navigation</span>
+              </div>
+              <ul className="space-y-2.5 text-xs font-medium text-slate-400">
+                <li>
+                  <a href="#home" className="hover:text-blue-400 transition-colors">
+                    Home
+                  </a>
+                </li>
+                <li>
+                  <a href="#skills" className="hover:text-blue-400 transition-colors">
+                    Skills
+                  </a>
+                </li>
+                <li>
+                  <a href="#projects" className="hover:text-blue-400 transition-colors">
+                    Projects
+                  </a>
+                </li>
+                <li>
+                  <a href="#testimonials" className="hover:text-blue-400 transition-colors">
+                    Testimonials
+                  </a>
+                </li>
+                <li>
+                  <a href="#contact" className="hover:text-blue-400 transition-colors">
+                    Contact
+                  </a>
+                </li>
+              </ul>
             </div>
-            <ul className="grid grid-cols-2 gap-y-2.5 gap-x-4 text-xs font-medium text-slate-400">
-              <li>
-                <a href="#home" className="hover:text-blue-400 transition-colors">
-                  Home
-                </a>
-              </li>
-              <li>
-                <a href="#about" className="hover:text-blue-400 transition-colors">
-                  About Me
-                </a>
-              </li>
-              <li>
-                <a href="#skills" className="hover:text-blue-400 transition-colors">
-                  Skills
-                </a>
-              </li>
-              <li>
-                <a href="#services" className="hover:text-blue-400 transition-colors">
-                  Services
-                </a>
-              </li>
-              <li>
-                <a href="#projects" className="hover:text-blue-400 transition-colors">
-                  Projects
-                </a>
-              </li>
-              <li>
-                <a href="#experience" className="hover:text-blue-400 transition-colors">
-                  Experience
-                </a>
-              </li>
-              <li>
-                <a href="#testimonials" className="hover:text-blue-400 transition-colors">
-                  Testimonials
-                </a>
-              </li>
-              <li>
-                <a href="#blog" className="hover:text-blue-400 transition-colors">
-                  Articles
-                </a>
-              </li>
-              <li>
-                <a href="#contact" className="hover:text-blue-400 transition-colors">
-                  Contact
-                </a>
-              </li>
-              <li>
-                <Link href="/admin" className="text-blue-400/80 hover:text-blue-400 transition-colors font-semibold">
-                  Admin CMS
-                </Link>
-              </li>
-            </ul>
+
+            {/* Sub-col 2: Explore */}
+            <div className="space-y-4">
+              <div className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+                <span>Explore</span>
+              </div>
+              <ul className="space-y-2.5 text-xs font-medium text-slate-400">
+                <li>
+                  <a href="#about" className="hover:text-cyan-400 transition-colors">
+                    About Me
+                  </a>
+                </li>
+                <li>
+                  <a href="#services" className="hover:text-cyan-400 transition-colors">
+                    Services
+                  </a>
+                </li>
+                <li>
+                  <a href="#experience" className="hover:text-cyan-400 transition-colors">
+                    Experience
+                  </a>
+                </li>
+                <li>
+                  <a href="#blog" className="hover:text-cyan-400 transition-colors">
+                    Articles
+                  </a>
+                </li>
+                <li>
+                  <Link href="/admin" className="text-blue-400/90 hover:text-blue-300 transition-colors font-semibold">
+                    Admin CMS
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
 
           {/* Column 3: Tech Ecosystem (2.5 Cols) */}

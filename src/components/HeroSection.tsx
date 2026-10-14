@@ -63,7 +63,7 @@ export function HeroSection({ hero }: HeroSectionProps) {
   const videoData = getEmbedOrVideo(hero.introVideoUrl);
 
   return (
-    <section id="home" className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden">
+    <section id="home" className="relative pt-24 pb-10 sm:pt-32 sm:pb-14 md:pt-36 md:pb-20 overflow-hidden">
       <div className="max-w-[1680px] mx-auto px-5 sm:px-8 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           {/* Left Column: Intro & Info */}
@@ -174,14 +174,15 @@ export function HeroSection({ hero }: HeroSectionProps) {
             </div>
           </div>
 
-          {/* Right Column: Siam Portrait & Floating Cards */}
-          <div data-aos="fade-left" data-aos-duration="900" data-aos-delay="150" className="lg:col-span-5 relative flex justify-center items-center">
-            {/* Ambient Backlight Glow */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/30 via-cyan-500/20 to-blue-400/10 rounded-full blur-3xl -z-10 scale-95" />
+          {/* Right Column: Siam Portrait & Refined Floating Badges */}
+          <div data-aos="fade-left" data-aos-duration="900" data-aos-delay="150" className="lg:col-span-5 relative flex justify-center items-center py-4 lg:py-0">
+            {/* Multi-layer Ambient Backlight Glow */}
+            <div className="absolute -inset-4 sm:-inset-6 bg-gradient-to-tr from-blue-600/35 via-cyan-500/25 to-indigo-600/20 rounded-[3rem] blur-3xl -z-10 animate-pulse-glow" />
+            <div className="absolute inset-0 bg-blue-500/10 rounded-full blur-2xl -z-10 scale-90" />
 
             {/* Central Portrait Container */}
-            <div className="relative w-[300px] h-[340px] sm:w-[360px] sm:h-[400px] rounded-3xl overflow-hidden p-2 bg-gradient-to-b from-blue-500/20 via-white/[0.04] to-transparent border border-white/10 shadow-2xl shadow-blue-900/30">
-              <div className="relative w-full h-full rounded-2xl overflow-hidden bg-slate-900">
+            <div className="relative w-[280px] h-[340px] sm:w-[360px] sm:h-[420px] lg:w-[420px] lg:h-[490px] xl:w-[450px] xl:h-[520px] rounded-[2.25rem] sm:rounded-[2.75rem] overflow-hidden p-2.5 sm:p-3 bg-gradient-to-b from-blue-500/30 via-white/[0.05] to-blue-950/20 border border-white/15 shadow-[0_25px_60px_-15px_rgba(59,130,246,0.35)] backdrop-blur-md">
+              <div className="relative w-full h-full rounded-[1.75rem] sm:rounded-[2.25rem] overflow-hidden bg-slate-900 border border-white/10">
                 <Image
                   src={hero.heroImage || "/images/siam_portrait.jpg"}
                   alt={hero.name || "Siratul Islam Siam"}
@@ -189,12 +190,14 @@ export function HeroSection({ hero }: HeroSectionProps) {
                   priority
                   className="object-cover object-top hover:scale-105 transition-transform duration-700"
                 />
+                {/* Soft gradient bottom shade */}
+                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#07090e]/80 via-transparent to-transparent pointer-events-none" />
               </div>
             </div>
 
             {/* Floating Card: Clean Code (Top Left) */}
-            <div className="absolute -top-4 -left-6 sm:-left-10 bg-[#0d1322]/90 backdrop-blur-xl border border-white/10 p-3.5 rounded-2xl shadow-xl flex items-center gap-3 animate-float-slow hidden sm:flex">
-              <div className="w-9 h-9 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-400">
+            <div className="absolute -top-3 -left-3 sm:-left-6 lg:-left-8 bg-[#0a0f1d]/90 backdrop-blur-xl border border-white/15 p-3 sm:p-3.5 rounded-2xl shadow-2xl flex items-center gap-3 animate-float-slow">
+              <div className="w-9 h-9 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-400 shadow-sm">
                 <Code2 className="w-5 h-5" />
               </div>
               <div className="text-left">
@@ -204,18 +207,24 @@ export function HeroSection({ hero }: HeroSectionProps) {
             </div>
 
             {/* Floating Rocket Badge (Top Right) */}
-            <div className="absolute top-6 -right-4 sm:-right-8 bg-[#0d1322]/90 backdrop-blur-xl border border-white/10 p-3 rounded-2xl shadow-xl flex items-center gap-2.5 animate-float-reverse">
+            <div className="absolute top-4 -right-2 sm:-right-4 lg:-right-6 bg-[#0a0f1d]/90 backdrop-blur-xl border border-pink-500/30 p-2.5 sm:p-3 rounded-2xl shadow-2xl shadow-pink-500/10 flex items-center gap-2.5 animate-float-reverse">
               <div className="w-8 h-8 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center">
                 <Rocket className="w-4 h-4" />
               </div>
               <div className="text-left text-xs font-semibold text-slate-200">
                 Turning ideas <br />
-                <span className="text-pink-400">into reality</span>
+                <span className="text-pink-400 font-bold">into reality</span>
               </div>
             </div>
 
+            {/* Floating Badge: Available for Work (Middle/Bottom Right) */}
+            <div className="absolute bottom-20 -right-2 sm:-right-5 lg:-right-7 bg-[#0a0f1d]/90 backdrop-blur-xl border border-emerald-500/30 px-3.5 py-2 rounded-full text-xs font-semibold text-emerald-300 shadow-2xl flex items-center gap-2 animate-float-slow hidden sm:flex">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] animate-pulse" />
+              <span>Available for Hire</span>
+            </div>
+
             {/* Floating Code Snippet Card (Bottom Left) */}
-            <div className="absolute -bottom-6 -left-4 sm:-left-8 bg-[#070b14]/95 backdrop-blur-2xl border border-blue-500/20 p-4 rounded-2xl shadow-2xl font-mono text-[11px] text-left max-w-[280px] animate-float-slow">
+            <div className="absolute -bottom-6 -left-3 sm:-left-6 lg:-left-8 bg-[#070b14]/95 backdrop-blur-2xl border border-blue-500/30 p-3.5 sm:p-4 rounded-2xl shadow-2xl font-mono text-[11px] text-left max-w-[260px] sm:max-w-[280px] animate-float-slow z-20">
               <div className="flex items-center gap-1.5 pb-2 mb-2 border-b border-white/[0.08]">
                 <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
                 <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
@@ -237,18 +246,23 @@ export function HeroSection({ hero }: HeroSectionProps) {
           </div>
         </div>
 
-        {/* Tech Stack Horizontal Strip / Marquee */}
-        <div data-aos="fade-up" data-aos-delay="200" className="mt-16 pt-8 border-t border-white/[0.06]">
-          <div className="flex flex-wrap items-center justify-center sm:justify-between gap-6 sm:gap-8 opacity-85 hover:opacity-100 transition-opacity">
-            {marqueeTechnologies.map((tech) => (
-              <div
-                key={tech.name}
-                className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-blue-500/30 hover:bg-white/[0.06] transition-all"
-              >
-                <TechIcon name={tech.techKey} className="w-5 h-5" />
-                <span className="text-sm font-semibold text-slate-200">{tech.name}</span>
-              </div>
-            ))}
+        {/* Tech Stack Infinite Continuous Marquee */}
+        <div data-aos="fade-up" data-aos-delay="200" className="mt-14 sm:mt-18 pt-8 border-t border-white/[0.06] overflow-hidden">
+          <div className="relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+            <div className="animate-marquee flex items-center gap-4 sm:gap-6 py-2">
+              {/* First Track */}
+              {[...marqueeTechnologies, ...marqueeTechnologies, ...marqueeTechnologies].map((tech, index) => (
+                <div
+                  key={`${tech.name}-${index}`}
+                  className="flex items-center gap-2.5 px-5 py-2.5 rounded-2xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.08] hover:border-blue-500/40 transition-all duration-300 shrink-0 group shadow-md"
+                >
+                  <TechIcon name={tech.techKey} className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                  <span className="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-white transition-colors whitespace-nowrap">
+                    {tech.name}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

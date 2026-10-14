@@ -54,7 +54,7 @@ export function TestimonialsSection({ testimonials }: TestimonialsSectionProps) 
   };
 
   return (
-    <section id="testimonials" className="relative py-20 md:py-28 overflow-hidden">
+    <section id="testimonials" className="relative py-12 sm:py-16 md:py-24 lg:py-28 overflow-hidden">
       <div className="max-w-[1680px] mx-auto px-5 sm:px-8 lg:px-12 space-y-12">
         {/* Section Header with Arrows */}
         <div data-aos="fade-up" className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
