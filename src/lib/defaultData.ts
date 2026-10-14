@@ -184,7 +184,9 @@ export const DEFAULT_PORTFOLIO_DATA = {
     location: "Dhaka, Bangladesh",
     metaTitle: "Siratul Islam Siam | Web Developer & Problem Solver",
     metaDescription: "I build modern, high-performance websites and web applications that help businesses grow.",
-    viewsCount: 1240,
+    viewsCount: 1276,
     copyrightText: "© 2026 Siratul Islam Siam. All rights reserved.",
+    subscribers: [],
+    analyticsHistory: [],
   },
 };

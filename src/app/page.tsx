@@ -41,11 +41,25 @@ async function getPortfolioData() {
         BlogPost.find({ status: "Published" }).sort({ publishedAt: -1 }).lean(),
         Experience.find().sort({ order: 1 }).lean(),
         Testimonial.find().sort({ order: 1 }).lean(),
-        SiteSettings.findOneAndUpdate(
-          {},
-          { $inc: { viewsCount: 1 } },
-          { new: true, upsert: true }
-        ).lean(),
+        (async () => {
+          const today = new Date().toISOString().split("T")[0];
+          const doc = await SiteSettings.findOne();
+          if (doc) {
+            doc.viewsCount = (doc.viewsCount || 1276) + 1;
+            const history = doc.analyticsHistory || [];
+            const entry = history.find((h: any) => h.date === today);
+            if (entry) {
+              entry.views = (entry.views || 0) + 1;
+            } else {
+              history.push({ date: today, views: 1, visitors: 1 });
+            }
+            if (history.length > 120) history.splice(0, history.length - 120);
+            doc.analyticsHistory = history;
+            await doc.save();
+            return doc.toObject();
+          }
+          return null;
+        })(),
       ]);
 
     return {

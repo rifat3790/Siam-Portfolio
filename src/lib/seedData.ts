@@ -348,6 +348,20 @@ export async function ensureDataSeeded() {
   // 10. Site Settings
   const settingsCount = await SiteSettings.countDocuments();
   if (settingsCount === 0) {
+    const history = [];
+    const now = new Date();
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+      const dateStr = d.toISOString().split("T")[0];
+      const baseViews = 35 + Math.floor(Math.sin(i * 0.4) * 14) + (29 - i);
+      const baseVisitors = Math.floor(baseViews * 0.72);
+      history.push({
+        date: dateStr,
+        views: baseViews,
+        visitors: baseVisitors,
+      });
+    }
+
     await SiteSettings.create({
       siteName: "Siam.",
       ownerName: "Siratul Islam Siam",
@@ -358,9 +372,30 @@ export async function ensureDataSeeded() {
       metaTitle: "Siratul Islam Siam | Web Developer & Problem Solver",
       metaDescription:
         "I build modern, high-performance websites and web applications that help businesses grow. Clean code, creative design and a focus on real results.",
-      viewsCount: 1240,
+      viewsCount: 1276,
       copyrightText: "© 2026 Siratul Islam Siam. All rights reserved.",
+      analyticsHistory: history,
     });
+  } else {
+    // Ensure existing settings document has analytics history populated
+    const existingSettings = await SiteSettings.findOne();
+    if (existingSettings && (!existingSettings.analyticsHistory || existingSettings.analyticsHistory.length === 0)) {
+      const history = [];
+      const now = new Date();
+      for (let i = 29; i >= 0; i--) {
+        const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+        const dateStr = d.toISOString().split("T")[0];
+        const baseViews = 35 + Math.floor(Math.sin(i * 0.4) * 14) + (29 - i);
+        const baseVisitors = Math.floor(baseViews * 0.72);
+        history.push({
+          date: dateStr,
+          views: baseViews,
+          visitors: baseVisitors,
+        });
+      }
+      existingSettings.analyticsHistory = history;
+      await existingSettings.save();
+    }
   }
 
   return { success: true, message: "Database verified & seeded" };

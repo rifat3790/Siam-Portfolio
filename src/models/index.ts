@@ -265,6 +265,7 @@ export interface ISiteSettings extends Document {
   viewsCount: number;
   copyrightText: string;
   subscribers: Array<{ email: string; date: Date }>;
+  analyticsHistory: Array<{ date: string; views: number; visitors: number }>;
 }
 
 const SiteSettingsSchema = new Schema<ISiteSettings>(
@@ -291,6 +292,10 @@ const SiteSettingsSchema = new Schema<ISiteSettings>(
     },
     subscribers: {
       type: [{ email: String, date: { type: Date, default: Date.now } }],
+      default: [],
+    },
+    analyticsHistory: {
+      type: [{ date: String, views: Number, visitors: Number }],
       default: [],
     },
   },

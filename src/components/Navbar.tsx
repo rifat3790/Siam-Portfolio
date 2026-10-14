@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowUpRight, Menu, X, ShieldCheck } from "lucide-react";
+import { ArrowUpRight, Menu, X } from "lucide-react";
 
 interface NavbarProps {
   siteName?: string;
@@ -60,16 +60,8 @@ export function Navbar({ siteName = "Siam." }: NavbarProps) {
           ))}
         </nav>
 
-        {/* Right CTA and Admin Access */}
+        {/* Right CTA */}
         <div className="hidden md:flex items-center gap-4">
-          <Link
-            href="/admin"
-            title="Portfolio Admin CMS"
-            className="p-2 text-slate-400 hover:text-blue-400 hover:bg-white/[0.05] rounded-full transition-all"
-          >
-            <ShieldCheck className="w-5 h-5" />
-          </Link>
-
           <a
             href="#contact"
             className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:-translate-y-0.5 transition-all duration-200"
@@ -81,13 +73,6 @@ export function Navbar({ siteName = "Siam." }: NavbarProps) {
 
         {/* Mobile Hamburger Button */}
         <div className="flex md:hidden items-center gap-3">
-          <Link
-            href="/admin"
-            title="Portfolio Admin"
-            className="p-2 text-slate-400 hover:text-blue-400 rounded-full"
-          >
-            <ShieldCheck className="w-5 h-5" />
-          </Link>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 text-slate-300 hover:text-white rounded-lg hover:bg-white/5 transition-colors"
