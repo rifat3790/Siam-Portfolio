@@ -125,6 +125,30 @@ export function TechIcon({ name, className = "w-7 h-7" }: { name: string; classN
         </svg>
       );
 
+    case "wordpress":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" fill="#21759B" />
+          <path d="M4 12c0 3.8 2.7 7 6.4 7.8L6.2 8.7C4.8 9.6 4 10.7 4 12zm11.2 7.4l2.8-8.1c.5 1.5.5 2.6.5 3.3 0 2.2-.8 3.9-3.3 4.8zm-3.6-7.3l-2.2 6.5c.8.3 1.7.4 2.6.4.8 0 1.6-.1 2.3-.4l-2.7-6.5zm7.3-6c-.6 0-1.5.2-1.5.7 0 .5.3.8.3 1.3 0 1-.9 2.5-1.3 3.6L12.4 20c3.6-.8 6.3-3.9 6.3-7.7 0-1.7-.5-3.3-1.4-4.6l1.6-.4z" fill="#fff" />
+        </svg>
+      );
+
+    case "wix":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="none">
+          <rect width="24" height="24" rx="5" fill="#0C0C0D" />
+          <path d="M5.5 16l2.3-8h2.1l1.4 5.2 1.4-5.2h2.1l2.3 8h-1.9l-1.4-5.5-1.5 5.5h-1.8l-1.5-5.5-1.4 5.5H5.5z" fill="#fff" />
+        </svg>
+      );
+
+    case "webflow":
+      return (
+        <svg className={className} viewBox="0 0 24 24" fill="none">
+          <rect width="24" height="24" rx="5" fill="#146EF5" />
+          <path d="M18 8.5c-1.3 0-2.3.8-2.7 1.8-.7-.9-1.8-1.5-3-1.5-1.4 0-2.6.8-3.1 2L7 8.5H5l3.2 8.5h2.1l1.5-4.5c.3-.9.9-1.5 1.7-1.5.9 0 1.4.6 1.4 1.5v4.5H17v-4.5c0-1.8-1-3-2.5-3z" fill="#fff" />
+        </svg>
+      );
+
     default:
       return (
         <div className="w-7 h-7 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-xs uppercase">

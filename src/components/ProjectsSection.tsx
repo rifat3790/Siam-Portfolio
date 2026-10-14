@@ -25,32 +25,59 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
   const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
   const [filter, setFilter] = useState<string>("All");
 
-  const categories = ["All", "Next.js", "React.js", "MongoDB", "Full Stack"];
+  const categories = ["All", "Next.js", "React.js", "Shopify", "WordPress", "Wix", "Webflow", "Full Stack"];
 
   const displayProjects = projects && projects.length > 0 ? projects : [
     {
-      title: "E-Commerce Website",
-      description: "Full-featured online store with product catalog, cart, Stripe checkout and admin dashboard.",
+      title: "Luxury Fashion E-Commerce",
+      description: "Custom Shopify high-converting storefront with liquid animations, variant selectors, and checkout optimization.",
       image: "/images/project_ecommerce.jpg",
-      tags: ["Next.js", "Tailwind CSS", "Stripe", "MongoDB"],
+      tags: ["Shopify", "Liquid", "Tailwind CSS"],
       liveUrl: "#",
       githubUrl: "https://github.com",
       status: "Published",
     },
     {
-      title: "Task Management App",
+      title: "Corporate Agency Portal",
+      description: "High-performance WordPress business site with custom theme, ACF Pro, speed optimization, and SEO architecture.",
+      image: "/images/project_taskapp.jpg",
+      tags: ["WordPress", "PHP", "Elementor Pro"],
+      liveUrl: "#",
+      githubUrl: "https://github.com",
+      status: "Published",
+    },
+    {
+      title: "Creative Studio Portfolio",
+      description: "Award-winning Webflow interactive website with 3D canvas interactions, CMS collections, and micro-animations.",
+      image: "/images/siam_working.jpg",
+      tags: ["Webflow", "UI/UX", "Animation"],
+      liveUrl: "#",
+      githubUrl: "https://github.com",
+      status: "Published",
+    },
+    {
+      title: "Modern Boutique Store",
+      description: "Wix Studio bespoke responsive website with Velo custom backend functions, booking system, and payment flow.",
+      image: "/images/project_ecommerce.jpg",
+      tags: ["Wix", "Wix Studio", "Velo"],
+      liveUrl: "#",
+      githubUrl: "https://github.com",
+      status: "Published",
+    },
+    {
+      title: "Task Management SaaS",
       description: "Interactive project management tool with Kanban boards, team workspaces and live updates.",
       image: "/images/project_taskapp.jpg",
-      tags: ["React.js", "Node.js", "MongoDB", "Tailwind CSS"],
+      tags: ["Next.js", "React.js", "MongoDB", "Full Stack"],
       liveUrl: "#",
       githubUrl: "https://github.com",
       status: "Published",
     },
     {
-      title: "Portfolio Website",
+      title: "Developer Portfolio & CMS",
       description: "Luxury personal portfolio & CMS with dynamic MongoDB content and responsive dark UI.",
       image: "/images/siam_portrait.jpg",
-      tags: ["Next.js", "Tailwind CSS", "MongoDB", "Framer Motion"],
+      tags: ["Next.js", "Tailwind CSS", "MongoDB"],
       liveUrl: "#",
       githubUrl: "https://github.com",
       status: "Published",
@@ -60,7 +87,15 @@ export function ProjectsSection({ projects }: ProjectsSectionProps) {
   const filteredProjects =
     filter === "All"
       ? displayProjects
-      : displayProjects.filter((p) => p.tags.some((t) => t.toLowerCase().includes(filter.toLowerCase())));
+      : displayProjects.filter((p) => {
+          const filterLower = filter.toLowerCase().replace(/[^a-z0-9]/g, "");
+          const matchTag = p.tags?.some((t) =>
+            t.toLowerCase().replace(/[^a-z0-9]/g, "").includes(filterLower)
+          );
+          const matchTitle = p.title?.toLowerCase().includes(filter.toLowerCase());
+          const matchDesc = p.description?.toLowerCase().includes(filter.toLowerCase());
+          return matchTag || matchTitle || matchDesc;
+        });
 
   return (
     <section id="projects" className="relative py-12 sm:py-16 md:py-24 lg:py-28 overflow-hidden">

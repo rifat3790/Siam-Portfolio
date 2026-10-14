@@ -26,6 +26,7 @@ import {
   TrendingUp,
   Plus,
   PenSquare,
+  Pencil,
   X,
   Check,
   Trash2,
@@ -72,6 +73,12 @@ export default function AdminPage() {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState<boolean>(false);
   const [timeRange, setTimeRange] = useState<"7d" | "30d" | "90d" | "year">("30d");
   const [hoveredPoint, setHoveredPoint] = useState<any>(null);
+
+  // Edit states for sections with inline/modal edit options
+  const [editingService, setEditingService] = useState<any>(null);
+  const [editingSkill, setEditingSkill] = useState<any>(null);
+  const [editingExperience, setEditingExperience] = useState<any>(null);
+  const [editingTestimonial, setEditingTestimonial] = useState<any>(null);
 
   // Dynamic analytics calculation based on timeRange
   const analyticsData = React.useMemo(() => {
@@ -2051,11 +2058,57 @@ export default function AdminPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">
-                Tags (comma separated)
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                Project Platform / Category (Click to select &amp; tag)
+              </label>
+              <div className="flex flex-wrap gap-2 mb-2.5">
+                {[
+                  "Shopify",
+                  "WordPress",
+                  "Wix",
+                  "Webflow",
+                  "Next.js",
+                  "React.js",
+                  "Full Stack",
+                ].map((cat) => {
+                  const currentTags = Array.isArray(modalItem?.tags) ? modalItem.tags : [];
+                  const isSelected = currentTags.some(
+                    (t: string) => t.toLowerCase().trim() === cat.toLowerCase()
+                  );
+                  return (
+                    <button
+                      key={cat}
+                      type="button"
+                      onClick={() => {
+                        let newTags = [...currentTags];
+                        if (isSelected) {
+                          newTags = newTags.filter(
+                            (t: string) => t.toLowerCase().trim() !== cat.toLowerCase()
+                          );
+                        } else {
+                          newTags.push(cat);
+                        }
+                        setModalItem({ ...modalItem, tags: newTags });
+                      }}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all border ${
+                        isSelected
+                          ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white border-blue-400 shadow-lg shadow-blue-500/25"
+                          : "bg-white/[0.04] text-slate-300 border-white/10 hover:bg-white/[0.08]"
+                      }`}
+                    >
+                      {isSelected ? "✓ " : "+ "}
+                      {cat}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <label className="block text-[11px] text-slate-400 mb-1">
+                Custom Tags (comma separated)
               </label>
               <input
                 type="text"
+                placeholder="e.g. Shopify, Liquid, E-Commerce, Stripe"
                 value={Array.isArray(modalItem?.tags) ? modalItem.tags.join(", ") : modalItem?.tags || ""}
                 onChange={(e) =>
                   setModalItem({
@@ -2393,7 +2446,7 @@ export default function AdminPage() {
               {data?.experience?.map((exp: any) => (
                 <div
                   key={exp._id}
-                  className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex items-start justify-between gap-4"
+                  className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex items-start justify-between gap-4 hover:border-white/10 transition-colors"
                 >
                   <div className="space-y-1">
                     <div className="text-xs font-bold text-white flex items-center gap-2">
@@ -2403,34 +2456,68 @@ export default function AdminPage() {
                     <div className="text-[11px] text-slate-400">{exp.company}</div>
                     <p className="text-xs text-slate-300 pt-1">{exp.description}</p>
                   </div>
-                  <button
-                    onClick={() => {
-                      if (confirm(`Delete timeline item "${exp.role}"?`)) {
-                        handleSave("experience", "delete", {}, exp._id);
-                      }
-                    }}
-                    className="text-slate-500 hover:text-rose-400 p-1"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button
+                      onClick={() => setEditingExperience({ ...exp })}
+                      className="p-1.5 text-slate-400 hover:text-blue-400 rounded-lg hover:bg-white/[0.06] transition-colors"
+                      title="Edit Experience"
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (confirm(`Delete timeline item "${exp.role}"?`)) {
+                          handleSave("experience", "delete", {}, exp._id);
+                        }
+                      }}
+                      className="p-1.5 text-slate-400 hover:text-rose-400 rounded-lg hover:bg-white/[0.06] transition-colors"
+                      title="Delete Experience"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
 
-            {/* Add new experience */}
+            {/* Add or Edit experience */}
             <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 space-y-3">
-              <div className="text-xs font-bold text-white">Add New Experience Node</div>
+              <div className="flex items-center justify-between">
+                <div className="text-xs font-bold text-white">
+                  {editingExperience ? `Edit Timeline: ${editingExperience.role}` : "Add New Experience Node"}
+                </div>
+                {editingExperience && (
+                  <button
+                    onClick={() => setEditingExperience(null)}
+                    className="text-[11px] text-slate-400 hover:text-white"
+                  >
+                    Cancel Edit
+                  </button>
+                )}
+              </div>
               <div className="grid grid-cols-2 gap-3">
                 <input
                   id="newExpPeriod"
                   type="text"
                   placeholder="Period (e.g. 2024 - Present)"
+                  value={editingExperience ? editingExperience.period || "" : undefined}
+                  onChange={(e) => {
+                    if (editingExperience) {
+                      setEditingExperience({ ...editingExperience, period: e.target.value });
+                    }
+                  }}
                   className="px-3.5 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white"
                 />
                 <input
                   id="newExpRole"
                   type="text"
                   placeholder="Role (e.g. Senior Frontend Dev)"
+                  value={editingExperience ? editingExperience.role || "" : undefined}
+                  onChange={(e) => {
+                    if (editingExperience) {
+                      setEditingExperience({ ...editingExperience, role: e.target.value });
+                    }
+                  }}
                   className="px-3.5 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white"
                 />
               </div>
@@ -2438,30 +2525,69 @@ export default function AdminPage() {
                 id="newExpCompany"
                 type="text"
                 placeholder="Company / Client (e.g. Remote Agency)"
+                value={editingExperience ? editingExperience.company || "" : undefined}
+                onChange={(e) => {
+                  if (editingExperience) {
+                    setEditingExperience({ ...editingExperience, company: e.target.value });
+                  }
+                }}
                 className="w-full px-3.5 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white"
               />
               <textarea
                 id="newExpDesc"
                 rows={2}
                 placeholder="Description of responsibilities and achievements..."
-                className="w-full px-3.5 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white resize-none"
-              />
-              <button
-                onClick={() => {
-                  const period = (document.getElementById("newExpPeriod") as HTMLInputElement)?.value;
-                  const role = (document.getElementById("newExpRole") as HTMLInputElement)?.value;
-                  const company = (document.getElementById("newExpCompany") as HTMLInputElement)?.value;
-                  const description = (document.getElementById("newExpDesc") as HTMLTextAreaElement)?.value;
-                  if (period && role && description) {
-                    handleSave("experience", "create", { period, role, company, description });
-                  } else {
-                    alert("Please fill in Period, Role, and Description");
+                value={editingExperience ? editingExperience.description || "" : undefined}
+                onChange={(e) => {
+                  if (editingExperience) {
+                    setEditingExperience({ ...editingExperience, description: e.target.value });
                   }
                 }}
-                className="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold"
-              >
-                Add to Timeline
-              </button>
+                className="w-full px-3.5 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white resize-none"
+              />
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    if (editingExperience) {
+                      if (!editingExperience.period || !editingExperience.role || !editingExperience.description) {
+                        alert("Please fill in Period, Role, and Description");
+                        return;
+                      }
+                      handleSave("experience", "update", editingExperience, editingExperience._id);
+                      setEditingExperience(null);
+                    } else {
+                      const period = (document.getElementById("newExpPeriod") as HTMLInputElement)?.value;
+                      const role = (document.getElementById("newExpRole") as HTMLInputElement)?.value;
+                      const company = (document.getElementById("newExpCompany") as HTMLInputElement)?.value;
+                      const description = (document.getElementById("newExpDesc") as HTMLTextAreaElement)?.value;
+                      if (period && role && description) {
+                        handleSave("experience", "create", { period, role, company, description });
+                        const p = document.getElementById("newExpPeriod") as HTMLInputElement;
+                        const r = document.getElementById("newExpRole") as HTMLInputElement;
+                        const c = document.getElementById("newExpCompany") as HTMLInputElement;
+                        const d = document.getElementById("newExpDesc") as HTMLTextAreaElement;
+                        if (p) p.value = "";
+                        if (r) r.value = "";
+                        if (c) c.value = "";
+                        if (d) d.value = "";
+                      } else {
+                        alert("Please fill in Period, Role, and Description");
+                      }
+                    }
+                  }}
+                  className="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-all"
+                >
+                  {editingExperience ? "Save Experience Changes" : "Add to Timeline"}
+                </button>
+                {editingExperience && (
+                  <button
+                    onClick={() => setEditingExperience(null)}
+                    className="px-4 py-2.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-xs font-semibold text-slate-300"
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -2488,7 +2614,7 @@ export default function AdminPage() {
               {data?.testimonials?.map((t: any) => (
                 <div
                   key={t._id}
-                  className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex items-center justify-between gap-4"
+                  className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex items-center justify-between gap-4 hover:border-white/10 transition-colors"
                 >
                   <div className="flex items-center gap-3">
                     <div className="relative w-10 h-10 rounded-full overflow-hidden bg-slate-800">
@@ -2499,34 +2625,68 @@ export default function AdminPage() {
                       <div className="text-[11px] text-slate-400 italic">&ldquo;{t.content}&rdquo;</div>
                     </div>
                   </div>
-                  <button
-                    onClick={() => {
-                      if (confirm(`Delete testimonial from "${t.name}"?`)) {
-                        handleSave("testimonials", "delete", {}, t._id);
-                      }
-                    }}
-                    className="text-slate-500 hover:text-rose-400 p-1"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button
+                      onClick={() => setEditingTestimonial({ ...t })}
+                      className="p-1.5 text-slate-400 hover:text-blue-400 rounded-lg hover:bg-white/[0.06] transition-colors"
+                      title="Edit Testimonial"
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (confirm(`Delete testimonial from "${t.name}"?`)) {
+                          handleSave("testimonials", "delete", {}, t._id);
+                        }
+                      }}
+                      className="p-1.5 text-slate-400 hover:text-rose-400 rounded-lg hover:bg-white/[0.06] transition-colors"
+                      title="Delete Testimonial"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
 
-            {/* Add new testimonial */}
+            {/* Add or Edit testimonial */}
             <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 space-y-3">
-              <div className="text-xs font-bold text-white">Add New Client Testimonial</div>
+              <div className="flex items-center justify-between">
+                <div className="text-xs font-bold text-white">
+                  {editingTestimonial ? `Edit Testimonial: ${editingTestimonial.name}` : "Add New Client Testimonial"}
+                </div>
+                {editingTestimonial && (
+                  <button
+                    onClick={() => setEditingTestimonial(null)}
+                    className="text-[11px] text-slate-400 hover:text-white"
+                  >
+                    Cancel Edit
+                  </button>
+                )}
+              </div>
               <div className="grid grid-cols-2 gap-3">
                 <input
                   id="newTestName"
                   type="text"
                   placeholder="Client Name (e.g. David Miller)"
+                  value={editingTestimonial ? editingTestimonial.name || "" : undefined}
+                  onChange={(e) => {
+                    if (editingTestimonial) {
+                      setEditingTestimonial({ ...editingTestimonial, name: e.target.value });
+                    }
+                  }}
                   className="px-3.5 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white"
                 />
                 <input
                   id="newTestRole"
                   type="text"
                   placeholder="Role (e.g. CEO, TechCorp)"
+                  value={editingTestimonial ? editingTestimonial.role || "" : undefined}
+                  onChange={(e) => {
+                    if (editingTestimonial) {
+                      setEditingTestimonial({ ...editingTestimonial, role: e.target.value });
+                    }
+                  }}
                   className="px-3.5 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white"
                 />
               </div>
@@ -2535,6 +2695,12 @@ export default function AdminPage() {
                   id="newTestAvatar"
                   type="text"
                   placeholder="Avatar URL (or upload image to right)"
+                  value={editingTestimonial ? editingTestimonial.avatar || "" : undefined}
+                  onChange={(e) => {
+                    if (editingTestimonial) {
+                      setEditingTestimonial({ ...editingTestimonial, avatar: e.target.value });
+                    }
+                  }}
                   className="flex-1 px-3.5 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white"
                 />
                 <label className="cursor-pointer px-3 py-2 rounded-xl bg-blue-600/30 hover:bg-blue-600/50 border border-blue-500/30 text-blue-400 text-xs font-semibold flex items-center gap-1.5 shrink-0">
@@ -2552,8 +2718,12 @@ export default function AdminPage() {
                       const res = await fetch("/api/upload", { method: "POST", body: form });
                       const d = await res.json();
                       if (d.success) {
-                        const input = document.getElementById("newTestAvatar") as HTMLInputElement;
-                        if (input) input.value = d.url;
+                        if (editingTestimonial) {
+                          setEditingTestimonial({ ...editingTestimonial, avatar: d.url });
+                        } else {
+                          const input = document.getElementById("newTestAvatar") as HTMLInputElement;
+                          if (input) input.value = d.url;
+                        }
                         showToast("Client avatar uploaded to database!");
                       }
                     }}
@@ -2564,30 +2734,63 @@ export default function AdminPage() {
                 id="newTestContent"
                 rows={2}
                 placeholder="Client quote / review message..."
-                className="w-full px-3.5 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white resize-none"
-              />
-              <button
-                onClick={() => {
-                  const name = (document.getElementById("newTestName") as HTMLInputElement)?.value;
-                  const role = (document.getElementById("newTestRole") as HTMLInputElement)?.value;
-                  const content = (document.getElementById("newTestContent") as HTMLTextAreaElement)?.value;
-                  const avatar = (document.getElementById("newTestAvatar") as HTMLInputElement)?.value;
-                  if (name && content) {
-                    handleSave("testimonials", "create", {
-                      name,
-                      role: role || "Client",
-                      content,
-                      rating: 5,
-                      avatar: avatar || "/images/siam_portrait.jpg",
-                    });
-                  } else {
-                    alert("Please provide client name and review content");
+                value={editingTestimonial ? editingTestimonial.content || "" : undefined}
+                onChange={(e) => {
+                  if (editingTestimonial) {
+                    setEditingTestimonial({ ...editingTestimonial, content: e.target.value });
                   }
                 }}
-                className="w-full py-2.5 rounded-xl bg-pink-600 hover:bg-pink-500 text-white text-xs font-bold"
-              >
-                Add Testimonial
-              </button>
+                className="w-full px-3.5 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white resize-none"
+              />
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    if (editingTestimonial) {
+                      if (!editingTestimonial.name || !editingTestimonial.content) {
+                        alert("Please provide client name and review content");
+                        return;
+                      }
+                      handleSave("testimonials", "update", editingTestimonial, editingTestimonial._id);
+                      setEditingTestimonial(null);
+                    } else {
+                      const name = (document.getElementById("newTestName") as HTMLInputElement)?.value;
+                      const role = (document.getElementById("newTestRole") as HTMLInputElement)?.value;
+                      const content = (document.getElementById("newTestContent") as HTMLTextAreaElement)?.value;
+                      const avatar = (document.getElementById("newTestAvatar") as HTMLInputElement)?.value;
+                      if (name && content) {
+                        handleSave("testimonials", "create", {
+                          name,
+                          role: role || "Client",
+                          content,
+                          rating: 5,
+                          avatar: avatar || "/images/siam_portrait.jpg",
+                        });
+                        const n = document.getElementById("newTestName") as HTMLInputElement;
+                        const r = document.getElementById("newTestRole") as HTMLInputElement;
+                        const c = document.getElementById("newTestContent") as HTMLTextAreaElement;
+                        const a = document.getElementById("newTestAvatar") as HTMLInputElement;
+                        if (n) n.value = "";
+                        if (r) r.value = "";
+                        if (c) c.value = "";
+                        if (a) a.value = "";
+                      } else {
+                        alert("Please provide client name and review content");
+                      }
+                    }
+                  }}
+                  className="flex-1 py-2.5 rounded-xl bg-pink-600 hover:bg-pink-500 text-white text-xs font-bold transition-all"
+                >
+                  {editingTestimonial ? "Save Testimonial Changes" : "Add Testimonial"}
+                </button>
+                {editingTestimonial && (
+                  <button
+                    onClick={() => setEditingTestimonial(null)}
+                    className="px-4 py-2.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-xs font-semibold text-slate-300"
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -2614,55 +2817,112 @@ export default function AdminPage() {
               {data?.services?.map((svc: any) => (
                 <div
                   key={svc._id}
-                  className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex items-center justify-between gap-4"
+                  className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex items-center justify-between gap-4 hover:border-white/10 transition-colors"
                 >
                   <div>
                     <div className="text-xs font-bold text-white">{svc.title}</div>
                     <div className="text-[11px] text-slate-400">{svc.description}</div>
                   </div>
-                  <button
-                    onClick={() => {
-                      if (confirm(`Delete service "${svc.title}"?`)) {
-                        handleSave("services", "delete", {}, svc._id);
-                      }
-                    }}
-                    className="text-slate-500 hover:text-rose-400 p-1"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button
+                      onClick={() => setEditingService({ ...svc })}
+                      className="p-1.5 text-slate-400 hover:text-blue-400 rounded-lg hover:bg-white/[0.06] transition-colors"
+                      title="Edit Service"
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (confirm(`Delete service "${svc.title}"?`)) {
+                          handleSave("services", "delete", {}, svc._id);
+                        }
+                      }}
+                      className="p-1.5 text-slate-400 hover:text-rose-400 rounded-lg hover:bg-white/[0.06] transition-colors"
+                      title="Delete Service"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
 
-            {/* Add Service */}
+            {/* Add or Edit Service */}
             <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 space-y-3">
-              <div className="text-xs font-bold text-white">Add New Service Offering</div>
+              <div className="flex items-center justify-between">
+                <div className="text-xs font-bold text-white">
+                  {editingService ? `Edit Service: ${editingService.title}` : "Add New Service Offering"}
+                </div>
+                {editingService && (
+                  <button
+                    onClick={() => setEditingService(null)}
+                    className="text-[11px] text-slate-400 hover:text-white"
+                  >
+                    Cancel Edit
+                  </button>
+                )}
+              </div>
               <input
                 id="newSvcTitle"
                 type="text"
                 placeholder="Service Title (e.g. Cloud Architecture)"
+                value={editingService ? editingService.title || "" : undefined}
+                onChange={(e) => {
+                  if (editingService) {
+                    setEditingService({ ...editingService, title: e.target.value });
+                  }
+                }}
                 className="w-full px-3.5 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white"
               />
               <textarea
                 id="newSvcDesc"
                 rows={2}
                 placeholder="Short description of the service..."
-                className="w-full px-3.5 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white resize-none"
-              />
-              <button
-                onClick={() => {
-                  const title = (document.getElementById("newSvcTitle") as HTMLInputElement)?.value;
-                  const description = (document.getElementById("newSvcDesc") as HTMLTextAreaElement)?.value;
-                  if (title && description) {
-                    handleSave("services", "create", { title, description, icon: "layout", linkText: "Learn More" });
-                  } else {
-                    alert("Please provide title and description");
+                value={editingService ? editingService.description || "" : undefined}
+                onChange={(e) => {
+                  if (editingService) {
+                    setEditingService({ ...editingService, description: e.target.value });
                   }
                 }}
-                className="w-full py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold"
-              >
-                Add Service
-              </button>
+                className="w-full px-3.5 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white resize-none"
+              />
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    if (editingService) {
+                      if (!editingService.title || !editingService.description) {
+                        alert("Please provide title and description");
+                        return;
+                      }
+                      handleSave("services", "update", editingService, editingService._id);
+                      setEditingService(null);
+                    } else {
+                      const title = (document.getElementById("newSvcTitle") as HTMLInputElement)?.value;
+                      const description = (document.getElementById("newSvcDesc") as HTMLTextAreaElement)?.value;
+                      if (title && description) {
+                        handleSave("services", "create", { title, description, icon: "layout", linkText: "Learn More" });
+                        const t = document.getElementById("newSvcTitle") as HTMLInputElement;
+                        const d = document.getElementById("newSvcDesc") as HTMLTextAreaElement;
+                        if (t) t.value = "";
+                        if (d) d.value = "";
+                      } else {
+                        alert("Please provide title and description");
+                      }
+                    }
+                  }}
+                  className="flex-1 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold transition-all"
+                >
+                  {editingService ? "Save Service Changes" : "Add Service"}
+                </button>
+                {editingService && (
+                  <button
+                    onClick={() => setEditingService(null)}
+                    className="px-4 py-2.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-xs font-semibold text-slate-300"
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -2686,47 +2946,101 @@ export default function AdminPage() {
               {data?.skills?.map((skill: any) => (
                 <div
                   key={skill._id}
-                  className="flex items-center justify-between p-3 rounded-xl bg-white/[0.03] border border-white/[0.06]"
+                  className="flex items-center justify-between p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-white/10 transition-colors"
                 >
-                  <span className="text-xs font-bold text-white">{skill.name}</span>
-                  <button
-                    onClick={() => {
-                      if (confirm(`Delete skill "${skill.name}"?`)) {
-                        handleSave("skills", "delete", {}, skill._id);
-                      }
-                    }}
-                    className="text-slate-500 hover:text-rose-400"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
+                  <span className="text-xs font-bold text-white truncate pr-2">{skill.name}</span>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button
+                      onClick={() => setEditingSkill({ ...skill })}
+                      className="p-1 text-slate-400 hover:text-blue-400 rounded hover:bg-white/[0.06] transition-colors"
+                      title="Edit Skill"
+                    >
+                      <Pencil className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (confirm(`Delete skill "${skill.name}"?`)) {
+                          handleSave("skills", "delete", {}, skill._id);
+                        }
+                      }}
+                      className="p-1 text-slate-500 hover:text-rose-400 rounded hover:bg-white/[0.06] transition-colors"
+                      title="Delete Skill"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
 
-            <div className="pt-4 border-t border-white/10 flex items-center gap-2">
-              <input
-                id="newSkillName"
-                type="text"
-                placeholder="New skill name (e.g. Next.js, GraphQL, Docker)"
-                className="flex-1 px-3.5 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white"
-              />
-              <button
-                onClick={() => {
-                  const input = document.getElementById("newSkillName") as HTMLInputElement;
-                  if (input && input.value) {
-                    handleSave("skills", "create", {
-                      name: input.value,
-                      category: "Frontend",
-                      icon: input.value.toLowerCase(),
-                      color: "#3b82f6",
-                    });
-                    input.value = "";
-                  }
-                }}
-                className="px-5 py-2.5 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white"
-              >
-                Add Skill
-              </button>
+            <div className="pt-4 border-t border-white/10 space-y-2">
+              <div className="flex items-center justify-between text-xs font-bold text-white">
+                <span>{editingSkill ? `Edit Skill: ${editingSkill.name}` : "Add New Skill"}</span>
+                {editingSkill && (
+                  <button
+                    onClick={() => setEditingSkill(null)}
+                    className="text-[11px] font-normal text-slate-400 hover:text-white"
+                  >
+                    Cancel Edit
+                  </button>
+                )}
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  id="newSkillName"
+                  type="text"
+                  placeholder="Skill name (e.g. Next.js, Shopify, Docker)"
+                  value={editingSkill ? editingSkill.name || "" : undefined}
+                  onChange={(e) => {
+                    if (editingSkill) {
+                      setEditingSkill({ ...editingSkill, name: e.target.value });
+                    }
+                  }}
+                  className="flex-1 px-3.5 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-white"
+                />
+                <select
+                  value={editingSkill ? editingSkill.category || "Frontend" : "Frontend"}
+                  onChange={(e) => {
+                    if (editingSkill) {
+                      setEditingSkill({ ...editingSkill, category: e.target.value });
+                    }
+                  }}
+                  className="px-3 py-2.5 rounded-xl bg-[#101726] border border-white/10 text-xs text-white"
+                >
+                  <option value="Frontend">Frontend</option>
+                  <option value="Backend">Backend</option>
+                  <option value="CMS">CMS / Platforms</option>
+                  <option value="Tools">Tools</option>
+                </select>
+                <button
+                  onClick={() => {
+                    if (editingSkill) {
+                      if (!editingSkill.name) {
+                        alert("Please enter skill name");
+                        return;
+                      }
+                      handleSave("skills", "update", editingSkill, editingSkill._id);
+                      setEditingSkill(null);
+                    } else {
+                      const input = document.getElementById("newSkillName") as HTMLInputElement;
+                      if (input && input.value) {
+                        handleSave("skills", "create", {
+                          name: input.value,
+                          category: "Frontend",
+                          icon: input.value.toLowerCase(),
+                          color: "#3b82f6",
+                        });
+                        input.value = "";
+                      } else {
+                        alert("Please enter skill name");
+                      }
+                    }
+                  }}
+                  className="px-5 py-2.5 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white transition-all shrink-0"
+                >
+                  {editingSkill ? "Save Skill" : "Add Skill"}
+                </button>
+              </div>
             </div>
           </div>
         </div>

@@ -40,8 +40,11 @@ export function HeroSection({ hero }: HeroSectionProps) {
     { name: "Next.js", techKey: "nextjs" },
     { name: "React", techKey: "react" },
     { name: "Shopify", techKey: "shopify" },
+    { name: "WordPress", techKey: "wordpress" },
     { name: "Tailwind CSS", techKey: "tailwindcss" },
     { name: "MongoDB", techKey: "mongodb" },
+    { name: "Wix", techKey: "wix" },
+    { name: "Webflow", techKey: "webflow" },
     { name: "Firebase", techKey: "firebase" },
   ];
 
@@ -248,20 +251,57 @@ export function HeroSection({ hero }: HeroSectionProps) {
 
         {/* Tech Stack Infinite Continuous Marquee */}
         <div data-aos="fade-up" data-aos-delay="200" className="mt-14 sm:mt-18 pt-8 border-t border-white/[0.06] overflow-hidden">
-          <div className="relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-            <div className="animate-marquee flex items-center gap-4 sm:gap-6 py-2">
-              {/* First Track */}
-              {[...marqueeTechnologies, ...marqueeTechnologies, ...marqueeTechnologies].map((tech, index) => (
-                <div
-                  key={`${tech.name}-${index}`}
-                  className="flex items-center gap-2.5 px-5 py-2.5 rounded-2xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.08] hover:border-blue-500/40 transition-all duration-300 shrink-0 group shadow-md"
-                >
-                  <TechIcon name={tech.techKey} className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                  <span className="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-white transition-colors whitespace-nowrap">
-                    {tech.name}
-                  </span>
-                </div>
-              ))}
+          <style>{`
+            @keyframes infiniteMarqueeScroll {
+              0% {
+                transform: translate3d(0, 0, 0);
+              }
+              100% {
+                transform: translate3d(-100%, 0, 0);
+              }
+            }
+            .marquee-track-scroll {
+              display: flex;
+              flex-shrink: 0;
+              will-change: transform;
+              animation: infiniteMarqueeScroll 28s linear infinite;
+            }
+            .marquee-track-scroll:hover {
+              animation-play-state: paused;
+            }
+          `}</style>
+
+          <div className="relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)] select-none">
+            <div className="flex w-max">
+              {/* Track 1 */}
+              <div className="marquee-track-scroll flex items-center gap-4 sm:gap-6 py-2 pr-4 sm:pr-6">
+                {[...marqueeTechnologies, ...marqueeTechnologies].map((tech, index) => (
+                  <div
+                    key={`t1-${tech.name}-${index}`}
+                    className="flex items-center gap-2.5 px-5 py-2.5 rounded-2xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.08] hover:border-blue-500/40 transition-all duration-300 shrink-0 group shadow-md"
+                  >
+                    <TechIcon name={tech.techKey} className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                    <span className="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-white transition-colors whitespace-nowrap">
+                      {tech.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Track 2 (Clone for 100% seamless infinite loop) */}
+              <div className="marquee-track-scroll flex items-center gap-4 sm:gap-6 py-2 pr-4 sm:pr-6" aria-hidden="true">
+                {[...marqueeTechnologies, ...marqueeTechnologies].map((tech, index) => (
+                  <div
+                    key={`t2-${tech.name}-${index}`}
+                    className="flex items-center gap-2.5 px-5 py-2.5 rounded-2xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.08] hover:border-blue-500/40 transition-all duration-300 shrink-0 group shadow-md"
+                  >
+                    <TechIcon name={tech.techKey} className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                    <span className="text-xs sm:text-sm font-semibold text-slate-200 group-hover:text-white transition-colors whitespace-nowrap">
+                      {tech.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

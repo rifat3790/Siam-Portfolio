@@ -170,6 +170,67 @@ export async function ensureDataSeeded() {
       },
     ];
     await Project.insertMany(defaultProjects);
+  } else {
+    // Ensure projects for new platform tabs exist in database
+    const hasShopify = await Project.findOne({ tags: { $in: ["Shopify", "shopify"] } });
+    if (!hasShopify) {
+      await Project.create({
+        title: "Luxury Fashion Store",
+        description: "Custom Shopify high-converting storefront with liquid animations, variant selectors, and checkout optimization.",
+        image: "/images/project_ecommerce.jpg",
+        tags: ["Shopify", "Liquid", "E-Commerce"],
+        liveUrl: "https://example.com/shopify",
+        githubUrl: "https://github.com",
+        status: "Published",
+        featured: true,
+        order: 6,
+      });
+    }
+
+    const hasWordPress = await Project.findOne({ tags: { $in: ["WordPress", "wordpress"] } });
+    if (!hasWordPress) {
+      await Project.create({
+        title: "Corporate Agency Portal",
+        description: "High-performance WordPress business site with custom theme, ACF Pro, speed optimization, and SEO architecture.",
+        image: "/images/project_taskapp.jpg",
+        tags: ["WordPress", "PHP", "Elementor Pro"],
+        liveUrl: "https://example.com/wordpress",
+        githubUrl: "https://github.com",
+        status: "Published",
+        featured: true,
+        order: 7,
+      });
+    }
+
+    const hasWebflow = await Project.findOne({ tags: { $in: ["Webflow", "webflow"] } });
+    if (!hasWebflow) {
+      await Project.create({
+        title: "Creative Studio Portfolio",
+        description: "Award-winning Webflow interactive website with 3D canvas interactions, CMS collections, and micro-animations.",
+        image: "/images/siam_working.jpg",
+        tags: ["Webflow", "UI/UX", "Animation"],
+        liveUrl: "https://example.com/webflow",
+        githubUrl: "https://github.com",
+        status: "Published",
+        featured: true,
+        order: 8,
+      });
+    }
+
+    const hasWix = await Project.findOne({ tags: { $in: ["Wix", "wix"] } });
+    if (!hasWix) {
+      await Project.create({
+        title: "Modern Boutique Store",
+        description: "Wix Studio bespoke responsive website with Velo custom backend functions, booking system, and payment flow.",
+        image: "/images/project_ecommerce.jpg",
+        tags: ["Wix", "Wix Studio", "Velo"],
+        liveUrl: "https://example.com/wix",
+        githubUrl: "https://github.com",
+        status: "Published",
+        featured: true,
+        order: 9,
+      });
+    }
   }
 
   // 6. Blog Posts
